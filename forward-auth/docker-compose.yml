@@ -1,0 +1,22 @@
+rwardauth:
+    image: mesosphere/traefik-forward-auth
+    environment:
+      - SECRET=test
+      - PROVIDER_URI=http://keycloak.inethihome.net/auth/realms/inethihome
+      - CLIENT_ID=test-client
+      - CLIENT_SECRET=1037fde8-e7a7-47a2-b72a-c4cfdc6f7505
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=inethi-bridge-traefik"
+      - "traefik.http.services.forwardauth.loadbalancer.server.port=4181"
+      - "traefik.http.routers.forwardauth.entrypoints=web"
+      - "traefik.http.routers.forwardauth.rule=Path(`/_oauth`)"
+      - "traefik.http.routers.forwardauth.middlewares=traefik-forward-auth"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://forwardauth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
+
+networks:
+  default:
+    external:
+      name: inethi-bridge-traefik

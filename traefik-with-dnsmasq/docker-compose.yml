@@ -10,7 +10,6 @@ services:
       - "5380:8080"
     volumes:
       - "${DNSMASQ_VOLUME}/dnsmasq.conf:/etc/dnsmasq.conf:ro"
-  
   traefik:
     image: traefik:v2.4
     container_name: inethi-traefik
@@ -31,18 +30,8 @@ services:
       - "traefik.http.routers.api.rule=Host(`${TRAEFIK_API_RULE}`)"
       - "traefik.http.routers.api.service=${TRAEFIK_API_SERVICE}"
       - "traefik.http.routers.api.entrypoints=${TRAEFIK_API_ENTRYPOINT}"
-      - "traefik.http.routers.api.middlewares=forward-auth" 
     depends_on:
       - dnsmasq
-
-  traefik-forward-auth:
-    image: funkypenguin/traefik-forward-auth
-    env_file: "${FORWARD_AUTH_ENV}"
-    labels:
-      - "traefik.port=4181"
-      - "traefik.frontend.rule=Host(`${TRAEFIK_API_RULE}`)"
-      - "traefik.frontend.auth.forward.address=${FORWARD_AUTH_ADDRESS}"
-      - "traefik.frontend.auth.forward.trustForwardHeader=true"
 
 networks:
   default:
