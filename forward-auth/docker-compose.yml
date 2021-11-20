@@ -19,7 +19,8 @@ services:
         - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://forwardauth:4181"
         - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
         - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
-
+      dns:
+        - 192.168.0.191
 networks:
   default:
     external:
